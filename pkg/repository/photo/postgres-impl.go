@@ -61,3 +61,23 @@ func (p *PhotoRepoImpl) UpdatePhoto(ctx context.Context, userId, id uint, input 
 
 	return result, nil
 }
+
+func (p *PhotoRepoImpl) DeletePhoto(ctx context.Context, userId, Id uint) error {
+	var result photo.Photo
+	db := p.pgCln.GetClient()
+	resultDb := db.Model(&photo.Photo{}).First(&result, "user_id = ? and id = ?", userId, Id)
+
+	if errors.Is(resultDb.Error, gorm.ErrRecordNotFound) {
+		return customError.ErrPhotoNotFound
+	}
+	if resultDb.Error != nil {
+		return resultDb.Error
+	}
+	resultDb = db.Delete(&result)
+
+	if resultDb.Error != nil {
+		return resultDb.Error
+	}
+
+	return nil
+}

@@ -33,9 +33,13 @@ func (p *PhotoRouterImpl) put() {
 	p.routerGroup.PUT("/:photoId", p.auth.CheckJwt, p.photoHandler.UpdatePhotoHdl)
 
 }
+func (p *PhotoRouterImpl) delete() {
+	p.routerGroup.DELETE("/:photoId", p.auth.CheckJwt, p.photoHandler.DeletePhotoHdl)
 
+}
 func (p *PhotoRouterImpl) Routers() {
 	p.post()
 	p.get()
 	p.put()
+	p.delete()
 }

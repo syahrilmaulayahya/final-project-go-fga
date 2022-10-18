@@ -140,3 +140,42 @@ func (p *PhotoHdlImpl) UpdatePhotoHdl(ctx *gin.Context) {
 	}
 	message.SuccessResponseSwitcher(ctx, http.StatusAccepted, "success update photo", response.UpdatePhotoResponseFromDomain(result))
 }
+
+func (p *PhotoHdlImpl) DeletePhotoHdl(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("photoId"))
+	if err != nil {
+		message.ErrorResponseSwitcher(ctx, http.StatusBadRequest, errors.ErrInvalidId.Error(), errors.ErrInvalidIdMsg.Error())
+	}
+	bearer := ctx.GetHeader("Authorization")
+
+	bearerArray := strings.Split(bearer, " ")
+
+	if len(bearerArray) != 2 {
+		message.ErrorResponseSwitcher(ctx, http.StatusUnauthorized, errors.ErrUnauthorizhedReqMsg.Error(), errors.ErrUnauthorizhedReq.Error())
+		return
+	}
+
+	if bearerArray[0] != "Bearer" {
+		message.ErrorResponseSwitcher(ctx, http.StatusUnauthorized, errors.ErrUnauthorizhedReqMsg.Error(), errors.ErrUnauthorizhedReq.Error())
+		return
+
+	}
+
+	getClaim := p.middleware.VerifyJWT(ctx, bearerArray[1])
+	var input request.PostPhotoRequest
+	if err := ctx.ShouldBind(&input); err != nil {
+		message.ErrorResponseSwitcher(ctx, http.StatusBadRequest, errors.ErrBindPayload.Error(), errors.ErrBadRequest.Error())
+		return
+	}
+	err = p.photoUseCase.DeletePhotoSvc(ctx, getClaim.Subject, uint(id))
+	if err == errors.ErrPhotoNotFound {
+		message.ErrorResponseSwitcher(ctx, http.StatusBadRequest, errors.ErrPhotoNotFoundMsg.Error(), errors.ErrPhotoNotFound.Error())
+		return
+	}
+	if err != nil {
+		message.ErrorResponseSwitcher(ctx, http.StatusInternalServerError, errors.ErrInternalServerErrorMsg.Error(), errors.ErrInternalServerError.Error())
+		return
+	}
+	message.SuccessResponseSwitcher(ctx, http.StatusOK, "your photo has been successfully deleted", nil)
+
+}

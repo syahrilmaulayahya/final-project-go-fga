@@ -7,4 +7,5 @@ type PhotoHdl interface {
 	GetOwnPhotoHdl(ctx *gin.Context)
 	GetPhotoByUserIdHdl(ctx *gin.Context)
 	UpdatePhotoHdl(ctx *gin.Context)
+	DeletePhotoHdl(ctx *gin.Context)
 }

@@ -49,3 +49,12 @@ func (p *PhotoUsecaseImpl) UpdatePhotoSvc(ctx context.Context, userId, Id uint, 
 	}
 	return result, nil
 }
+
+func (p *PhotoUsecaseImpl) DeletePhotoSvc(ctx context.Context, userId, Id uint) error {
+	err := p.photoRepo.DeletePhoto(ctx, userId, Id)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
