@@ -20,6 +20,10 @@ import (
 
 	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/usecase/crypto"
 	userusecase "github.com/syahrilmaulayahya/final-project-go-fga/pkg/usecase/user"
+
+	sosmedrepo "github.com/syahrilmaulayahya/final-project-go-fga/pkg/repository/sosmed"
+	sosmedhandler "github.com/syahrilmaulayahya/final-project-go-fga/pkg/server/http/handler/sosmed"
+	sosmedusecase "github.com/syahrilmaulayahya/final-project-go-fga/pkg/usecase/sosmed"
 )
 
 func dbMigrate(db *gorm.DB) {
@@ -68,7 +72,14 @@ func main() {
 	userRepo := userrepo.NewUserRepo(postgresCln)
 	userUsecase := userusecase.NewUserUsecase(userRepo)
 	userHandler := userhandler.NewUserHdl(userUsecase, middleware)
-	v1.NewUserRouter(ginEngine, userHandler).Routers()
+
+	sosmedRepo := sosmedrepo.NewSosmedRepo(postgresCln)
+	sosmedUsecase := sosmedusecase.NewSosmedUsecase(sosmedRepo)
+	sosmedHandler := sosmedhandler.NewSomedHdl(sosmedUsecase, middleware)
+
 	v1.NewAuthRouter(ginEngine, userHandler, auth).Routers()
+	v1.NewUserRouter(ginEngine, userHandler, auth).Routers()
+	v1.NewSosmedRouter(ginEngine, sosmedHandler, auth).Routers()
+
 	ginEngine.Serve()
 }
