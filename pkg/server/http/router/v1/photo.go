@@ -25,8 +25,12 @@ func (p *PhotoRouterImpl) post() {
 	p.routerGroup.POST("/", p.auth.CheckJwt, p.photoHandler.PostPhotoHdl)
 
 }
+func (p *PhotoRouterImpl) get() {
+	p.routerGroup.GET("/", p.auth.CheckJwt, p.photoHandler.GetOwnPhotoHdl)
+
+}
 
 func (p *PhotoRouterImpl) Routers() {
 	p.post()
-
+	p.get()
 }

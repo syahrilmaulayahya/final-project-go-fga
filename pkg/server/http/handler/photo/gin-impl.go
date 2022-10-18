@@ -61,3 +61,30 @@ func (p *PhotoHdlImpl) PostPhotoHdl(ctx *gin.Context) {
 	}
 	message.SuccessResponseSwitcher(ctx, http.StatusAccepted, "post photo success", (response.PostPhotoResponseFromDomain(result)))
 }
+
+func (p *PhotoHdlImpl) GetOwnPhotoHdl(ctx *gin.Context) {
+	bearer := ctx.GetHeader("Authorization")
+
+	bearerArray := strings.Split(bearer, " ")
+
+	if len(bearerArray) != 2 {
+		message.ErrorResponseSwitcher(ctx, http.StatusUnauthorized, errors.ErrUnauthorizhedReqMsg.Error(), errors.ErrUnauthorizhedReq.Error())
+		return
+	}
+
+	if bearerArray[0] != "Bearer" {
+		message.ErrorResponseSwitcher(ctx, http.StatusUnauthorized, errors.ErrUnauthorizhedReqMsg.Error(), errors.ErrUnauthorizhedReq.Error())
+		return
+
+	}
+
+	getClaim := p.middleware.VerifyJWT(ctx, bearerArray[1])
+
+	result, err := p.photoUseCase.GetPhotoByUseridSvc(ctx, getClaim.Subject)
+	if err != nil {
+		message.ErrorResponseSwitcher(ctx, http.StatusInternalServerError, errors.ErrInternalServerErrorMsg.Error(), errors.ErrInternalServerError.Error())
+		return
+	}
+	message.SuccessResponseSwitcher(ctx, http.StatusOK, "get photo success", (response.ListGetPhotoResponseFromDomain(result)))
+
+}

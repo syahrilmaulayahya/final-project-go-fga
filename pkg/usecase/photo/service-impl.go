@@ -28,3 +28,11 @@ func (p *PhotoUsecaseImpl) PostPhotoSvc(ctx context.Context, userId uint, input 
 	}
 	return input, nil
 }
+
+func (p *PhotoUsecaseImpl) GetPhotoByUseridSvc(ctx context.Context, userId uint) ([]photo.Photo, error) {
+	result, err := p.photoRepo.GetPhotoByUserid(ctx, userId)
+	if err != nil {
+		return []photo.Photo{}, err
+	}
+	return result, nil
+}

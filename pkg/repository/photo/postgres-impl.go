@@ -24,3 +24,13 @@ func (p *PhotoRepoImpl) PostPhoto(ctx context.Context, userId uint, input *photo
 	}
 	return nil
 }
+
+func (p *PhotoRepoImpl) GetPhotoByUserid(ctx context.Context, userId uint) ([]photo.Photo, error) {
+	var result []photo.Photo
+	db := p.pgCln.GetClient()
+	err := db.Model(&photo.Photo{}).Find(&result, "user_id = ?", userId)
+	if err.Error != nil {
+		return nil, err.Error
+	}
+	return result, nil
+}
