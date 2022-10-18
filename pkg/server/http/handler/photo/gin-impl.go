@@ -2,6 +2,7 @@ package photo
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -87,4 +88,17 @@ func (p *PhotoHdlImpl) GetOwnPhotoHdl(ctx *gin.Context) {
 	}
 	message.SuccessResponseSwitcher(ctx, http.StatusOK, "get photo success", (response.ListGetPhotoResponseFromDomain(result)))
 
+}
+
+func (p *PhotoHdlImpl) GetPhotoByUserIdHdl(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("user_id"))
+	if err != nil {
+		message.ErrorResponseSwitcher(ctx, http.StatusBadRequest, errors.ErrInvalidId.Error(), errors.ErrInvalidIdMsg.Error())
+	}
+	result, err := p.photoUseCase.GetPhotoByUseridSvc(ctx, uint(id))
+	if err != nil {
+		message.ErrorResponseSwitcher(ctx, http.StatusInternalServerError, errors.ErrInternalServerErrorMsg.Error(), errors.ErrInternalServerError.Error())
+		return
+	}
+	message.SuccessResponseSwitcher(ctx, http.StatusOK, "get photo success", (response.ListGetPhotoResponseFromDomain(result)))
 }
