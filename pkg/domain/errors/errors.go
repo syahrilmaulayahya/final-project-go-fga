@@ -18,6 +18,7 @@ var (
 	ErrUsernameNotFound       = errors.New("USERNAME_NOT_FOUND")
 	ErrUserNotFound           = errors.New("USER_NOT_FOUND")
 	ErrNameEmpty              = errors.New("NAME_CANNOT_BE_EMPTY")
+	ErrTitleEmpty             = errors.New("TITLE_CANNOT_BE_EMPTY")
 	ErrUrlEmpty               = errors.New("URL_CANNOT_BE_EMPTY")
 	ErrWrongEmailFormatMsg    = errors.New("wrong email format")
 	ErrEmptyUsernameMsg       = errors.New("username cannot be empty")
@@ -35,4 +36,5 @@ var (
 	ErrUserNotFoundMsg        = errors.New("user not found")
 	ErrNameEmptyMsg           = errors.New("name cannot be empty")
 	ErrUrlEmptyMsg            = errors.New("url cannot be empty")
+	ErrTitleEmptyMsg          = errors.New("title cannot be empty")
 )
