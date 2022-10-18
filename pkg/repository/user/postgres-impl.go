@@ -31,7 +31,7 @@ func (u *UserRepoImpl) Register(ctx context.Context, input *user.User) error {
 func (u *UserRepoImpl) GetUserById(ctx context.Context, id uint) (user.User, error) {
 	var result user.User
 	db := u.pgCln.GetClient()
-	resultDb := db.Model(&user.User{}).First(&result, "id = ?", id)
+	resultDb := db.Preload("Sosmed").First(&result, "id = ?", id)
 	if errors.Is(resultDb.Error, gorm.ErrRecordNotFound) {
 		return user.User{}, customError.ErrUserNotFound
 	}
