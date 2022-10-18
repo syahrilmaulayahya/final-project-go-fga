@@ -10,6 +10,7 @@ import (
 	engine "github.com/syahrilmaulayahya/final-project-go-fga/config/gin"
 	"github.com/syahrilmaulayahya/final-project-go-fga/config/postgres"
 	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/message"
+	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/photo"
 	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/sosmed"
 	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/user"
 	userrepo "github.com/syahrilmaulayahya/final-project-go-fga/pkg/repository/user"
@@ -24,10 +25,14 @@ import (
 	sosmedrepo "github.com/syahrilmaulayahya/final-project-go-fga/pkg/repository/sosmed"
 	sosmedhandler "github.com/syahrilmaulayahya/final-project-go-fga/pkg/server/http/handler/sosmed"
 	sosmedusecase "github.com/syahrilmaulayahya/final-project-go-fga/pkg/usecase/sosmed"
+
+	photorepo "github.com/syahrilmaulayahya/final-project-go-fga/pkg/repository/photo"
+	photohandler "github.com/syahrilmaulayahya/final-project-go-fga/pkg/server/http/handler/photo"
+	photousecase "github.com/syahrilmaulayahya/final-project-go-fga/pkg/usecase/photo"
 )
 
 func dbMigrate(db *gorm.DB) {
-	db.AutoMigrate(&user.User{}, &sosmed.Sosmed{})
+	db.AutoMigrate(&user.User{}, &sosmed.Sosmed{}, &photo.Photo{})
 }
 
 func init() {
@@ -77,9 +82,14 @@ func main() {
 	sosmedUsecase := sosmedusecase.NewSosmedUsecase(sosmedRepo)
 	sosmedHandler := sosmedhandler.NewSomedHdl(sosmedUsecase, middleware)
 
+	photoRepo := photorepo.NewPhotoRepo(postgresCln)
+	photoUsecase := photousecase.NewPhotoUsecase(photoRepo)
+	photoHandler := photohandler.NewPhotoHdl(photoUsecase, middleware)
+
 	v1.NewAuthRouter(ginEngine, userHandler, auth).Routers()
 	v1.NewUserRouter(ginEngine, userHandler, auth).Routers()
 	v1.NewSosmedRouter(ginEngine, sosmedHandler, auth).Routers()
+	v1.NewPhotoRouter(ginEngine, photoHandler, auth).Routers()
 
 	ginEngine.Serve()
 }

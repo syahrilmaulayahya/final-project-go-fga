@@ -3,6 +3,7 @@ package user
 import (
 	"time"
 
+	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/photo"
 	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/sosmed"
 	"gorm.io/gorm"
 )
@@ -14,6 +15,7 @@ type User struct {
 	Password  string    `gorm:"not null"`
 	Username  string    `gorm:"unique;not null"`
 	Sosmed    []sosmed.Sosmed
+	Photos    []photo.Photo
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt
