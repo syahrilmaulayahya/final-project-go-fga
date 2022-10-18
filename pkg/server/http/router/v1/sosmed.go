@@ -25,8 +25,12 @@ func (s *SosmedRouterImpl) post() {
 	s.routerGroup.POST("/", s.auth.CheckJwt, s.sosmedHandler.AddSosmedHdl)
 
 }
+func (s *SosmedRouterImpl) get() {
+	s.routerGroup.GET("/:userId", s.sosmedHandler.GetSosmedByUserIdHdl)
+
+}
 
 func (s *SosmedRouterImpl) Routers() {
 	s.post()
-
+	s.get()
 }
