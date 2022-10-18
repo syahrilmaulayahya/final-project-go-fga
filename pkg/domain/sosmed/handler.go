@@ -7,4 +7,5 @@ import (
 type SosmedHandler interface {
 	AddSosmedHdl(ctx *gin.Context)
 	GetSosmedByUserIdHdl(ctx *gin.Context)
+	UpdateSosmedHdl(ctx *gin.Context)
 }

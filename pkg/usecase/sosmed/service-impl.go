@@ -38,3 +38,13 @@ func (s *SosmedUsecaseImpl) GetSosmedByUserIdSvc(ctx context.Context, userId uin
 	}
 	return result, nil
 }
+func (s *SosmedUsecaseImpl) UpdateSosmedSvc(ctx context.Context, userId, Id uint, input sosmed.Sosmed) (sosmed.Sosmed, error) {
+	var result sosmed.Sosmed
+	var err error
+	result, err = s.sosmedRepo.UpdateSosmed(ctx, userId, Id, input)
+
+	if err != nil {
+		return sosmed.Sosmed{}, err
+	}
+	return result, nil
+}
