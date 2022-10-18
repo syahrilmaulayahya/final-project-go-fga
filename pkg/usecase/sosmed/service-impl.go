@@ -48,3 +48,11 @@ func (s *SosmedUsecaseImpl) UpdateSosmedSvc(ctx context.Context, userId, Id uint
 	}
 	return result, nil
 }
+func (s *SosmedUsecaseImpl) DeleteSosmedSvc(ctx context.Context, userId, Id uint) error {
+	err := s.sosmedRepo.DeleteSosmed(ctx, userId, Id)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -162,11 +162,7 @@ func (p *PhotoHdlImpl) DeletePhotoHdl(ctx *gin.Context) {
 	}
 
 	getClaim := p.middleware.VerifyJWT(ctx, bearerArray[1])
-	var input request.PostPhotoRequest
-	if err := ctx.ShouldBind(&input); err != nil {
-		message.ErrorResponseSwitcher(ctx, http.StatusBadRequest, errors.ErrBindPayload.Error(), errors.ErrBadRequest.Error())
-		return
-	}
+
 	err = p.photoUseCase.DeletePhotoSvc(ctx, getClaim.Subject, uint(id))
 	if err == errors.ErrPhotoNotFound {
 		message.ErrorResponseSwitcher(ctx, http.StatusBadRequest, errors.ErrPhotoNotFoundMsg.Error(), errors.ErrPhotoNotFound.Error())

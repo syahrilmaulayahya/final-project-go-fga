@@ -33,8 +33,13 @@ func (s *SosmedRouterImpl) put() {
 	s.routerGroup.PUT("/:socialMediaId", s.auth.CheckJwt, s.sosmedHandler.UpdateSosmedHdl)
 
 }
+func (s *SosmedRouterImpl) delete() {
+	s.routerGroup.DELETE("/:socialMediaId", s.auth.CheckJwt, s.sosmedHandler.DeleteSosmedHdl)
+
+}
 func (s *SosmedRouterImpl) Routers() {
 	s.post()
 	s.get()
 	s.put()
+	s.delete()
 }

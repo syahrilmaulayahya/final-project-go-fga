@@ -60,3 +60,23 @@ func (s *SosmedRepoImpl) UpdateSosmed(ctx context.Context, userId, Id uint, inpu
 
 	return result, nil
 }
+
+func (s *SosmedRepoImpl) DeleteSosmed(ctx context.Context, userId, Id uint) error {
+	var result sosmed.Sosmed
+	db := s.pgCln.GetClient()
+	resultDb := db.Model(&sosmed.Sosmed{}).First(&result, "user_id = ? and id = ?", userId, Id)
+
+	if errors.Is(resultDb.Error, gorm.ErrRecordNotFound) {
+		return customError.ErrSosmedNotFound
+	}
+	if resultDb.Error != nil {
+		return resultDb.Error
+	}
+	resultDb = db.Delete(&result)
+
+	if resultDb.Error != nil {
+		return resultDb.Error
+	}
+
+	return nil
+}
