@@ -2,6 +2,7 @@ package sosmed
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -59,4 +60,19 @@ func (s *SosmedHdlImpl) AddSosmedHdl(ctx *gin.Context) {
 		}
 	}
 	message.SuccessResponseSwitcher(ctx, http.StatusAccepted, "add social media success", response.AddSosmedResponseFromDomain(result))
+}
+
+func (s *SosmedHdlImpl) GetSosmedByUserIdHdl(ctx *gin.Context) {
+	var result []sosmed.Sosmed
+	id, err := strconv.Atoi(ctx.Param("userId"))
+	if err != nil {
+		message.ErrorResponseSwitcher(ctx, http.StatusBadRequest, errors.ErrInvalidId.Error(), errors.ErrInvalidIdMsg.Error())
+	}
+	result, err = s.sosmedUsecase.GetSosmedByUserIdSvc(ctx, uint(id))
+	if err != nil {
+		message.ErrorResponseSwitcher(ctx, http.StatusInternalServerError, errors.ErrInternalServerErrorMsg.Error(), errors.ErrInternalServerError.Error())
+		return
+	}
+	message.SuccessResponseSwitcher(ctx, http.StatusOK, "success getting data", response.ListGetSosmedResponseFromDomain(result))
+
 }

@@ -24,3 +24,13 @@ func (s *SosmedRepoImpl) AddSosmed(ctx context.Context, userId uint, input *sosm
 	}
 	return nil
 }
+
+func (s *SosmedRepoImpl) GetSosmedByUserId(ctx context.Context, userId uint) ([]sosmed.Sosmed, error) {
+	var result []sosmed.Sosmed
+	db := s.pgCln.GetClient()
+	resultDb := db.Model(&sosmed.Sosmed{}).Find(&result, "user_id = ?", userId)
+	if resultDb.Error != nil {
+		return nil, resultDb.Error
+	}
+	return result, nil
+}
