@@ -10,6 +10,7 @@ import (
 	engine "github.com/syahrilmaulayahya/final-project-go-fga/config/gin"
 	"github.com/syahrilmaulayahya/final-project-go-fga/config/postgres"
 	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/message"
+	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/sosmed"
 	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/user"
 	userrepo "github.com/syahrilmaulayahya/final-project-go-fga/pkg/repository/user"
 	userhandler "github.com/syahrilmaulayahya/final-project-go-fga/pkg/server/http/handler/user"
@@ -22,7 +23,7 @@ import (
 )
 
 func dbMigrate(db *gorm.DB) {
-	db.AutoMigrate(&user.User{})
+	db.AutoMigrate(&user.User{}, &sosmed.Sosmed{})
 }
 
 func init() {
