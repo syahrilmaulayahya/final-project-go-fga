@@ -55,3 +55,23 @@ func ListGetPhotoResponseFromDomain(domain []photo.Photo) []GetPhotoResponse {
 	}
 	return result
 }
+
+type UpdatePhotoResponse struct {
+	ID        uint      `json:"id"`
+	Title     string    `json:"title"`
+	Caption   string    `json:"caption"`
+	Url       string    `json:"url"`
+	UserId    uint      `json:"user_id"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+func UpdatePhotoResponseFromDomain(domain photo.Photo) UpdatePhotoResponse {
+	return UpdatePhotoResponse{
+		ID:        domain.ID,
+		Title:     domain.Title,
+		Caption:   domain.Caption,
+		Url:       domain.Url,
+		UserId:    domain.UserID,
+		UpdatedAt: domain.UpdatedAt,
+	}
+}

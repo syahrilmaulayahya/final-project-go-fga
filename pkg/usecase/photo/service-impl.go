@@ -36,3 +36,16 @@ func (p *PhotoUsecaseImpl) GetPhotoByUseridSvc(ctx context.Context, userId uint)
 	}
 	return result, nil
 }
+
+func (p *PhotoUsecaseImpl) UpdatePhotoSvc(ctx context.Context, userId, Id uint, input photo.Photo) (photo.Photo, error) {
+	var result photo.Photo
+	var err error
+	result, err = p.photoRepo.UpdatePhoto(ctx, userId, Id, input)
+	if err == errors.ErrUserNotFound {
+		return photo.Photo{}, errors.ErrUserNotFound
+	}
+	if err != nil {
+		return photo.Photo{}, err
+	}
+	return result, nil
+}

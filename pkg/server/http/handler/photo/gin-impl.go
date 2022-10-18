@@ -102,3 +102,41 @@ func (p *PhotoHdlImpl) GetPhotoByUserIdHdl(ctx *gin.Context) {
 	}
 	message.SuccessResponseSwitcher(ctx, http.StatusOK, "get photo success", (response.ListGetPhotoResponseFromDomain(result)))
 }
+
+func (p *PhotoHdlImpl) UpdatePhotoHdl(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("photoId"))
+	if err != nil {
+		message.ErrorResponseSwitcher(ctx, http.StatusBadRequest, errors.ErrInvalidId.Error(), errors.ErrInvalidIdMsg.Error())
+	}
+	bearer := ctx.GetHeader("Authorization")
+
+	bearerArray := strings.Split(bearer, " ")
+
+	if len(bearerArray) != 2 {
+		message.ErrorResponseSwitcher(ctx, http.StatusUnauthorized, errors.ErrUnauthorizhedReqMsg.Error(), errors.ErrUnauthorizhedReq.Error())
+		return
+	}
+
+	if bearerArray[0] != "Bearer" {
+		message.ErrorResponseSwitcher(ctx, http.StatusUnauthorized, errors.ErrUnauthorizhedReqMsg.Error(), errors.ErrUnauthorizhedReq.Error())
+		return
+
+	}
+
+	getClaim := p.middleware.VerifyJWT(ctx, bearerArray[1])
+	var input request.PostPhotoRequest
+	if err := ctx.ShouldBind(&input); err != nil {
+		message.ErrorResponseSwitcher(ctx, http.StatusBadRequest, errors.ErrBindPayload.Error(), errors.ErrBadRequest.Error())
+		return
+	}
+	result, err := p.photoUseCase.UpdatePhotoSvc(ctx, getClaim.Subject, uint(id), input.ToDomain())
+	if err == errors.ErrPhotoNotFound {
+		message.ErrorResponseSwitcher(ctx, http.StatusBadRequest, errors.ErrPhotoNotFoundMsg.Error(), errors.ErrPhotoNotFound.Error())
+		return
+	}
+	if err != nil {
+		message.ErrorResponseSwitcher(ctx, http.StatusInternalServerError, errors.ErrInternalServerErrorMsg.Error(), errors.ErrInternalServerError.Error())
+		return
+	}
+	message.SuccessResponseSwitcher(ctx, http.StatusAccepted, "success update photo", response.UpdatePhotoResponseFromDomain(result))
+}

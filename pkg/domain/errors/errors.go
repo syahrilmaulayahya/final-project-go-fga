@@ -21,6 +21,7 @@ var (
 	ErrTitleEmpty             = errors.New("TITLE_CANNOT_BE_EMPTY")
 	ErrUrlEmpty               = errors.New("URL_CANNOT_BE_EMPTY")
 	ErrInvalidId              = errors.New("INVALID_ID")
+	ErrPhotoNotFound          = errors.New("PHOTO_NOT_FOUND")
 	ErrWrongEmailFormatMsg    = errors.New("wrong email format")
 	ErrEmptyUsernameMsg       = errors.New("username cannot be empty")
 	ErrWrongPasswordFormatMsg = errors.New("password must be more than 6 characters")
@@ -39,4 +40,5 @@ var (
 	ErrUrlEmptyMsg            = errors.New("url cannot be empty")
 	ErrTitleEmptyMsg          = errors.New("title cannot be empty")
 	ErrInvalidIdMsg           = errors.New("id must be integer with value > 0")
+	ErrPhotoNotFoundMsg       = errors.New("can't find photo")
 )

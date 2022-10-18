@@ -2,9 +2,13 @@ package photo
 
 import (
 	"context"
+	"errors"
+
+	customError "github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/errors"
 
 	"github.com/syahrilmaulayahya/final-project-go-fga/config/postgres"
 	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/photo"
+	"gorm.io/gorm"
 )
 
 type PhotoRepoImpl struct {
@@ -32,5 +36,28 @@ func (p *PhotoRepoImpl) GetPhotoByUserid(ctx context.Context, userId uint) ([]ph
 	if err.Error != nil {
 		return nil, err.Error
 	}
+	return result, nil
+}
+
+func (p *PhotoRepoImpl) UpdatePhoto(ctx context.Context, userId, id uint, input photo.Photo) (photo.Photo, error) {
+	var result photo.Photo
+	db := p.pgCln.GetClient()
+	err := db.Model(&photo.Photo{}).First(&result, "user_id = ? and id = ?", userId, id)
+	if errors.Is(err.Error, gorm.ErrRecordNotFound) {
+		return photo.Photo{}, customError.ErrPhotoNotFound
+	}
+	if input.Title != "" {
+		result.Title = input.Title
+	}
+	result.Caption = input.Caption
+	if input.Url != "" {
+		result.Url = input.Url
+	}
+
+	err.Save(&result)
+	if err.Error != nil {
+		return photo.Photo{}, err.Error
+	}
+
 	return result, nil
 }
