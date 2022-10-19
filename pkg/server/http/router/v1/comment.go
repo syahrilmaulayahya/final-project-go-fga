@@ -30,8 +30,13 @@ func (c *CommentRouterImpl) get() {
 	c.routerGroup.GET("/:userId", c.auth.CheckJwt, c.commentHandler.GetCommentByUserIdHdl)
 
 }
+func (c *CommentRouterImpl) put() {
+	c.routerGroup.PUT("/:userId", c.auth.CheckJwt, c.commentHandler.EditCommentHdl)
+
+}
 func (c *CommentRouterImpl) Routers() {
 	c.post()
 	c.get()
+	c.put()
 
 }

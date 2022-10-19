@@ -15,3 +15,13 @@ func PostCommentToDomain(p PostCommentRequest) comment.Comment {
 		UserID:  p.UserId,
 	}
 }
+
+type EditCommentRequest struct {
+	Message string `json:"message"`
+}
+
+func UpdateCommentRequestToDomain(p EditCommentRequest) comment.Comment {
+	return comment.Comment{
+		Message: p.Message,
+	}
+}

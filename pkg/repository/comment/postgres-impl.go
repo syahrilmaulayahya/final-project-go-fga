@@ -43,3 +43,19 @@ func (c *CommentRepoImpl) GetCommentByUserId(ctx context.Context, userId uint) (
 	}
 	return result, nil
 }
+
+func (c *CommentRepoImpl) EditComment(ctx context.Context, input comment.Comment) (comment.Comment, error) {
+	var result comment.Comment
+	db := c.pgCln.GetClient()
+	err := db.Preload("Photo").Model(&comment.Comment{}).First(&result, "user_id = ? and id = ?", input.UserID, input.ID)
+	if errors.Is(err.Error, gorm.ErrRecordNotFound) {
+		return comment.Comment{}, customError.ErrCommentNotFound
+	}
+	result.Message = input.Message
+	err.Save(&result)
+	if err.Error != nil {
+		return comment.Comment{}, err.Error
+	}
+
+	return result, nil
+}
