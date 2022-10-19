@@ -24,6 +24,7 @@ var (
 	ErrPhotoNotFound          = errors.New("PHOTO_NOT_FOUND")
 	ErrSosmedNotFound         = errors.New("SOSMED_NOT_FOUND")
 	ErrMessageEmpty           = errors.New("MESSAGE_CANNOT_BE_EMPTY")
+	ErrCommentNotFound        = errors.New("COMMENT_NOT_FOUND")
 	ErrWrongEmailFormatMsg    = errors.New("wrong email format")
 	ErrEmptyUsernameMsg       = errors.New("username cannot be empty")
 	ErrWrongPasswordFormatMsg = errors.New("password must be more than 6 characters")
@@ -45,4 +46,5 @@ var (
 	ErrPhotoNotFoundMsg       = errors.New("can't find photo")
 	ErrSosmedNotFoundMsg      = errors.New("can't find sosmed")
 	ErrMessageEmptyMsg        = errors.New("message cannot be empty")
+	ErrCommentNotFoundMsg     = errors.New("can't find comment")
 )
