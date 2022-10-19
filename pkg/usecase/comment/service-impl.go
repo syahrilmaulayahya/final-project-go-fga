@@ -49,3 +49,11 @@ func (c *CommentUseCaseImplt) EditCommentSvc(ctx context.Context, input comment.
 	}
 	return result, nil
 }
+
+func (c *CommentUseCaseImplt) DeleteCommentSvc(ctx context.Context, userId, Id uint) error {
+	err := c.commentRepo.DeleteComment(ctx, userId, Id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

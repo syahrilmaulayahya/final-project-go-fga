@@ -31,12 +31,16 @@ func (c *CommentRouterImpl) get() {
 
 }
 func (c *CommentRouterImpl) put() {
-	c.routerGroup.PUT("/:userId", c.auth.CheckJwt, c.commentHandler.EditCommentHdl)
+	c.routerGroup.PUT("/:commentId", c.auth.CheckJwt, c.commentHandler.EditCommentHdl)
+
+}
+func (c *CommentRouterImpl) delete() {
+	c.routerGroup.DELETE("/:commentId", c.auth.CheckJwt, c.commentHandler.DeleteCommentHdl)
 
 }
 func (c *CommentRouterImpl) Routers() {
 	c.post()
 	c.get()
 	c.put()
-
+	c.delete()
 }
