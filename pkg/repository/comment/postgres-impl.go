@@ -59,3 +59,20 @@ func (c *CommentRepoImpl) EditComment(ctx context.Context, input comment.Comment
 
 	return result, nil
 }
+
+func (c *CommentRepoImpl) DeleteComment(ctx context.Context, userId, Id uint) error {
+	var result comment.Comment
+	db := c.pgCln.GetClient()
+	resultDb := db.Model(&comment.Comment{}).First(&result, "user_id = ? and id = ?", userId, Id)
+	if errors.Is(resultDb.Error, gorm.ErrRecordNotFound) {
+		return customError.ErrCommentNotFound
+	}
+	if resultDb.Error != nil {
+		return resultDb.Error
+	}
+	resultDb = db.Delete(&result)
+	if resultDb.Error != nil {
+		return resultDb.Error
+	}
+	return nil
+}
