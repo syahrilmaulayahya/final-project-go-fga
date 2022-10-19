@@ -25,3 +25,14 @@ func (c *CommentUseCaseImplt) PostCommentSvc(ctx context.Context, input comment.
 	}
 	return input, nil
 }
+
+func (c *CommentUseCaseImplt) GetCommentByUserIdSvc(ctx context.Context, userId uint) ([]comment.Comment, error) {
+	var result []comment.Comment
+	var err error
+
+	result, err = c.commentRepo.GetCommentByUserId(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}

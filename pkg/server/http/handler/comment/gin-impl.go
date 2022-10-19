@@ -2,6 +2,7 @@ package comment
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -52,11 +53,28 @@ func (c *CommentHandlerImpl) PostCommentHdl(ctx *gin.Context) {
 		case errors.ErrMessageEmpty:
 			message.ErrorResponseSwitcher(ctx, http.StatusBadRequest, errors.ErrMessageEmptyMsg.Error(), errors.ErrMessageEmpty.Error())
 			return
+		case errors.ErrPhotoNotFound:
+			message.ErrorResponseSwitcher(ctx, http.StatusBadRequest, errors.ErrPhotoNotFoundMsg.Error(), errors.ErrPhotoNotFound.Error())
+			return
 		default:
 			message.ErrorResponseSwitcher(ctx, http.StatusInternalServerError, errors.ErrInternalServerErrorMsg.Error(), errors.ErrInternalServerError.Error())
 			return
 		}
 	}
 	message.SuccessResponseSwitcher(ctx, http.StatusAccepted, "post comment success", (response.PostCommentResponseFromDomain(result)))
+
+}
+
+func (c *CommentHandlerImpl) GetCommentByUserIdHdl(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("userId"))
+	if err != nil {
+		message.ErrorResponseSwitcher(ctx, http.StatusBadRequest, errors.ErrInvalidId.Error(), errors.ErrInvalidIdMsg.Error())
+	}
+	result, err := c.commentUsecase.GetCommentByUserIdSvc(ctx, uint(id))
+	if err != nil {
+		message.ErrorResponseSwitcher(ctx, http.StatusInternalServerError, errors.ErrInternalServerErrorMsg.Error(), errors.ErrInternalServerError.Error())
+		return
+	}
+	message.SuccessResponseSwitcher(ctx, http.StatusOK, "get comment success", (response.ListGetCommentResponseFromDomain(result)))
 
 }
