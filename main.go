@@ -9,6 +9,7 @@ import (
 	"github.com/joho/godotenv"
 	engine "github.com/syahrilmaulayahya/final-project-go-fga/config/gin"
 	"github.com/syahrilmaulayahya/final-project-go-fga/config/postgres"
+	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/comment"
 	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/message"
 	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/photo"
 	"github.com/syahrilmaulayahya/final-project-go-fga/pkg/domain/sosmed"
@@ -29,10 +30,14 @@ import (
 	photorepo "github.com/syahrilmaulayahya/final-project-go-fga/pkg/repository/photo"
 	photohandler "github.com/syahrilmaulayahya/final-project-go-fga/pkg/server/http/handler/photo"
 	photousecase "github.com/syahrilmaulayahya/final-project-go-fga/pkg/usecase/photo"
+
+	commentrepo "github.com/syahrilmaulayahya/final-project-go-fga/pkg/repository/comment"
+	commenthandler "github.com/syahrilmaulayahya/final-project-go-fga/pkg/server/http/handler/comment"
+	commentusecase "github.com/syahrilmaulayahya/final-project-go-fga/pkg/usecase/comment"
 )
 
 func dbMigrate(db *gorm.DB) {
-	db.AutoMigrate(&user.User{}, &sosmed.Sosmed{}, &photo.Photo{})
+	db.AutoMigrate(&user.User{}, &sosmed.Sosmed{}, &photo.Photo{}, &comment.Comment{})
 }
 
 func init() {
@@ -86,10 +91,15 @@ func main() {
 	photoUsecase := photousecase.NewPhotoUsecase(photoRepo)
 	photoHandler := photohandler.NewPhotoHdl(photoUsecase, middleware)
 
+	commentRepo := commentrepo.NewCommentRepo(postgresCln)
+	commentUsecase := commentusecase.NewCommentUsecase(commentRepo)
+	commentHandler := commenthandler.NewCommentHandler(commentUsecase, middleware)
+
 	v1.NewAuthRouter(ginEngine, userHandler, auth).Routers()
 	v1.NewUserRouter(ginEngine, userHandler, auth).Routers()
 	v1.NewSosmedRouter(ginEngine, sosmedHandler, auth).Routers()
 	v1.NewPhotoRouter(ginEngine, photoHandler, auth).Routers()
+	v1.NewCommentRouter(ginEngine, commentHandler, auth).Routers()
 
 	ginEngine.Serve()
 }
